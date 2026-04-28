@@ -1,8 +1,10 @@
 package com.student.portfolio.controller;
 
 import com.student.portfolio.dto.AuthResponse;
+import com.student.portfolio.dto.ForgotPasswordRequest;
 import com.student.portfolio.dto.LoginRequest;
 import com.student.portfolio.dto.RegisterRequest;
+import com.student.portfolio.dto.ResetPasswordRequest;
 import com.student.portfolio.dto.UserResponse;
 import com.student.portfolio.entity.User;
 import com.student.portfolio.security.JwtService;
@@ -73,19 +75,51 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> processForgotPassword(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String newPassword = request.get("newPassword");
-        
-        boolean updated = userService.updatePasswordByEmail(email, newPassword);
-        Map<String, String> response = new HashMap<>();
-        if (updated) {
-            response.put("message", "Password reset successful");
+    public ResponseEntity<?> sendForgotPasswordEmail(@RequestBody ForgotPasswordRequest request) {
+        if (request == null || request.email() == null || request.email().isBlank()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Email is required");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        try {
+            userService.processForgotPassword(request.email());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Password reset email sent. Check your inbox.");
             return ResponseEntity.ok(response);
-        } else {
+        } catch (IllegalArgumentException ex) {
+            Map<String, String> response = new HashMap<>();
             response.put("error", "Email not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (IllegalStateException ex) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        } catch (Exception ex) {
+            logger.error("Unexpected forgot-password error email={}", request.email(), ex);
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Unable to process forgot password right now");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        if (request == null || request.token() == null || request.token().isBlank()
+                || request.newPassword() == null || request.newPassword().isBlank()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Token and new password are required");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        boolean updated = userService.resetPassword(request.token(), request.newPassword());
+        Map<String, String> response = new HashMap<>();
+        if (!updated) {
+            response.put("error", "Invalid or expired reset token");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        response.put("message", "Password reset successful");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/logout")

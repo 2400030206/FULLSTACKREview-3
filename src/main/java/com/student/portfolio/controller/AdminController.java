@@ -68,4 +68,55 @@ public class AdminController {
         Project updatedProject = projectService.getProjectById(id);
         return ResponseEntity.ok(updatedProject);
     }
+
+    @PostMapping("/users/migrate-passwords")
+    public ResponseEntity<?> migrateUserPasswords(Authentication authentication) {
+        if (getAdminSessionUser(authentication) == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized admins only"));
+        }
+
+        int migratedUsers = userService.migratePlaintextPasswords();
+        return ResponseEntity.ok(Map.of(
+                "message", "Password migration completed",
+                "migratedUsers", migratedUsers
+        ));
+    }
+
+    @PostMapping("/users/verify-password")
+    public ResponseEntity<?> verifyUserPassword(@RequestBody Map<String, String> request, Authentication authentication) {
+        if (getAdminSessionUser(authentication) == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized admins only"));
+        }
+
+        String email = request.get("email");
+        String rawPassword = request.get("password");
+        if (email == null || email.isBlank() || rawPassword == null || rawPassword.isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "email and password are required"));
+        }
+
+        boolean matches = userService.verifyPasswordByEmail(email, rawPassword);
+        return ResponseEntity.ok(Map.of("matches", matches));
+    }
+
+    @PostMapping("/users/reset-password")
+    public ResponseEntity<?> resetUserPassword(@RequestBody Map<String, String> request, Authentication authentication) {
+        if (getAdminSessionUser(authentication) == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized admins only"));
+        }
+
+        String email = request.get("email");
+        String newPassword = request.get("newPassword");
+        if (email == null || email.isBlank() || newPassword == null || newPassword.isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "email and newPassword are required"));
+        }
+
+        boolean updated = userService.updatePasswordByEmail(email, newPassword);
+        if (!updated) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+
+        return ResponseEntity.ok(Map.of("message", "Password reset successful"));
+    }
 }

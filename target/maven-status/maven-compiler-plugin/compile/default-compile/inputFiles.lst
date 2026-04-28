@@ -3,6 +3,7 @@ D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\repository\P
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\repository\MilestoneRepository.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\controller\HomeController.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\controller\StudentController.java
+D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\UserLoginRequest.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\config\WebConfig.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\security\JwtAuthenticationFilter.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\security\JwtService.java
@@ -11,10 +12,16 @@ D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\controller\A
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\RegisterRequest.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\AuthResponse.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\UserResponse.java
+D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\ForgotPasswordRequest.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\service\UserService.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\entity\Milestone.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\config\AdminInitializer.java
+D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\controller\UserController.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\repository\UserRepository.java
+D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\ResetPasswordRequest.java
+D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\service\EmailService.java
+D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\service\CustomUserDetailsService.java
+D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\PasswordUpdateRequest.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\entity\User.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\service\MilestoneService.java
 D:\Full-stack\student-portfolio\src\main\java\com\student\portfolio\dto\LoginRequest.java

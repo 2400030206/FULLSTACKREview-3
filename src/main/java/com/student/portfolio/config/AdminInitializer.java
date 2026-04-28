@@ -18,8 +18,19 @@ public class AdminInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private com.student.portfolio.service.UserService userService;
+
     @Override
     public void run(String... args) throws Exception {
+        // Run the password migration on startup
+        int count = userService.migratePlaintextPasswords();
+        if (count > 0) {
+            System.out.println("===============================================");
+            System.out.println("Migrated " + count + " plaintext passwords to BCrypt!");
+            System.out.println("===============================================");
+        }
+
         Optional<User> adminOpt = userRepository.findByUsername("admin");
         if (adminOpt.isEmpty()) {
             User admin = new User();

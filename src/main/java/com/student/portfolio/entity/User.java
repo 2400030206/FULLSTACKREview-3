@@ -35,6 +35,13 @@ public class User {
     @com.fasterxml.jackson.annotation.JsonIgnore
     private Portfolio portfolio;
 
+    // Reset Token for password reset
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "token_expiry")
+    private java.time.LocalDateTime tokenExpiry;
+
     // Constructors
     public User() {}
 
@@ -59,4 +66,10 @@ public class User {
 
     public Portfolio getPortfolio() { return portfolio; }
     public void setPortfolio(Portfolio portfolio) { this.portfolio = portfolio; }
+
+    public String getResetToken() { return resetToken; }
+    public void setResetToken(String resetToken) { this.resetToken = resetToken; }
+
+    public java.time.LocalDateTime getTokenExpiry() { return tokenExpiry; }
+    public void setTokenExpiry(java.time.LocalDateTime tokenExpiry) { this.tokenExpiry = tokenExpiry; }
 }
