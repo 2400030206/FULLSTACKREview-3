@@ -8,14 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${FRONTEND_URL:http://localhost:5173}")
-    private String frontendUrl;
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // Allow the React development server to make requests to our API
+        // Allow all origins to make requests to our API
         registry.addMapping("/**")
-                .allowedOrigins(frontendUrl)
+                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false); // JWT is sent in Authorization header
